@@ -20,7 +20,7 @@ export function ProgramSection() {
       <Title>타임테이블</Title>
       <Lead>
         트랙을 나누지 않습니다. 한 공간에서 모든 발표를 이어서 듣습니다. 세션은 35분, 쉬는
-        시간은 15분입니다.
+        시간은 10분입니다.
       </Lead>
 
       <ul className="mt-8 flex flex-wrap gap-2">
