@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { BREAK, content, groupByStart, minutes } from "@/data/content";
 import type { Entry } from "@/data/content";
 import { Eyebrow, Lead, Section, Tag, Title } from "./ui";
@@ -20,7 +19,8 @@ export function ProgramSection() {
       <Title>타임테이블</Title>
       <Lead>
         트랙을 나누지 않습니다. 한 공간에서 모든 발표를 이어서 듣습니다. 세션은 35분, 쉬는
-        시간은 10분입니다.
+        시간은 10분입니다. 쉬는 시간마다 세션 퀴즈가 있고, 끝에는 럭키 드로우와 네트워킹이
+        이어집니다.
       </Lead>
 
       <ul className="mt-8 flex flex-wrap gap-2">
@@ -67,12 +67,12 @@ export function ProgramSection() {
 function Slot({ entry, parallel }: { entry: Entry; parallel: boolean }) {
   const isBreak = entry.kind === BREAK;
 
-  /* 쉬는 시간은 정보가 아니라 여백이다. 눈에 띄지 않게 둔다. */
+  /* 쉬는 시간은 흐리게 두되, 그 시간에 무엇을 하는지는 한 줄로 덧붙인다. */
   if (isBreak) {
     return (
       <div className="text-sm text-dim">
-        {entry.title}
-        {entry.room && <span className="ml-2">· {entry.room}</span>}
+        <span className="text-muted">{entry.title}</span>
+        {entry.summary && <span className="ml-2">· {entry.summary}</span>}
       </div>
     );
   }
@@ -109,19 +109,6 @@ function Slot({ entry, parallel }: { entry: Entry; parallel: boolean }) {
       )}
     </>
   );
-
-  /* 주소이름이 있는 세션만 상세 페이지로 넘어간다. */
-  if (entry.slug) {
-    return (
-      <Link
-        href={`/sessions/${entry.slug}/`}
-        className="block border border-line p-5 transition hover:border-accent"
-      >
-        {body}
-        <span className="mt-4 inline-block text-sm font-bold text-accent">자세히 →</span>
-      </Link>
-    );
-  }
 
   return <div className="border border-line p-5">{body}</div>;
 }
