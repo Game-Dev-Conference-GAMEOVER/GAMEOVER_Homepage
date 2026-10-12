@@ -8,7 +8,7 @@
     "venue": "동명대학교 대학본관 107호",
     "host": "동명대학교 게임 개발 동아리 연합 · UPTRAND × 기즈모",
     "fee": "무료",
-    "applyUrl": "",
+    "applyUrl": "https://docs.google.com/forms/d/e/1FAIpQLSd0A2eNWlyCQG0KL_oU8xe7tlNwGzSye7eTCJSlkLt40ikBHg/viewform",
     "applyDeadline": "10월 24일 (토)",
     "surveyUrl": "https://docs.google.com/forms/d/e/1FAIpQLSefhkkrg8fb6WtDYU2QGqXz9QpTJCbS_bD-u9XOJfiRENVHew/viewform",
     "surveyNote": "정식 신청은 10월 초에 이 페이지에서 열립니다. 지금은 수요조사만 받고 있습니다.",
@@ -340,8 +340,8 @@
       "a": "됩니다. 세션은 35분, 쉬는 시간은 10분이라 중간에 드나드셔도 됩니다. 다만 럭키 드로우는 모든 세션에 참석하신 분만 응모할 수 있습니다."
     },
     {
-      "q": "신청은 언제부터 하나요?",
-      "a": "10월 초에 이 페이지에서 사전 신청을 받고 10월 24일 (토)에 마감합니다. 지금은 수요조사만 받고 있습니다."
+      "q": "신청은 어떻게 하나요?",
+      "a": "이 페이지의 「참가 신청하기」 버튼으로 신청하실 수 있습니다. 마감은 10월 24일 (토)입니다."
     },
     {
       "q": "발표 자료는 공개되나요?",
