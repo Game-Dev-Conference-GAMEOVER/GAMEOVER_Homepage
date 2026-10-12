@@ -1,6 +1,6 @@
 import { BREAK, content, groupByStart, minutes } from "@/data/content";
 import type { Entry } from "@/data/content";
-import { Eyebrow, Lead, Section, Tag, Title } from "./ui";
+import { Eyebrow, Section, Tag, Title } from "./ui";
 
 /**
  * 타임테이블.
@@ -17,11 +17,6 @@ export function ProgramSection() {
     <Section id="program" className="border-t border-line">
       <Eyebrow>Program</Eyebrow>
       <Title>타임테이블</Title>
-      <Lead>
-        트랙을 나누지 않습니다. 한 공간에서 모든 발표를 이어서 듣습니다. 세션은 35분, 쉬는
-        시간은 10분입니다. 쉬는 시간마다 세션 퀴즈가 있고, 끝에는 럭키 드로우와 네트워킹이
-        이어집니다.
-      </Lead>
 
       <ul className="mt-8 flex flex-wrap gap-2">
         {tracks.map((t) => (
