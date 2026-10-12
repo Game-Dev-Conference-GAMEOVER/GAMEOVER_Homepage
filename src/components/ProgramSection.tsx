@@ -77,37 +77,48 @@ function Slot({ entry, parallel }: { entry: Entry; parallel: boolean }) {
     );
   }
 
+  /*
+   * 카드가 가로를 꽉 채우므로, 누가(왼쪽)와 무엇을(오른쪽)을 양쪽에 나눠 둔다.
+   * 좁은 화면에서는 위아래로 쌓는다.
+   */
   const body = (
-    <>
-      <div className="flex flex-wrap items-center gap-2">
-        <Tag strong={parallel}>{entry.kind}</Tag>
-        {entry.room && <span className="text-xs text-dim">{entry.room}</span>}
+    <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] sm:items-center sm:gap-8">
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <Tag strong={parallel}>{entry.kind}</Tag>
+          {entry.room && <span className="text-xs text-dim">{entry.room}</span>}
+        </div>
+
+        {/*
+         * 연사가 정해진 세션은 연사 이름을 제목 자리에 크게 두고, 소속·직함을
+         * 그 아래 작은 회색 글씨로 둔다. 연사가 없는 순서(개회식·패널·폐회 등)는
+         * 순서 이름을 그대로 제목으로 쓴다.
+         */}
+        <p className="mt-3 text-lg leading-snug font-bold text-ink">
+          {entry.speaker || entry.title}
+        </p>
+
+        {entry.speaker ? (
+          entry.affiliation && <p className="mt-1 text-sm text-muted">{entry.affiliation}</p>
+        ) : (
+          /*
+           * 연사를 기다리는 것은 강연뿐이다. 개회식·네트워킹·폐회처럼 강연이 아닌
+           * 순서에까지 "섭외 중"을 붙이면 준비가 덜 된 행사처럼 보인다.
+           * 강연인지 아닌지는 주소이름을 붙였는지로 구분한다.
+           */
+          entry.slug && <p className="mt-1 text-sm text-dim">연사 섭외 중</p>
+        )}
       </div>
 
-      {/*
-       * 연사가 정해진 세션은 연사 이름을 제목 자리에 크게 두고, 소속·직함을
-       * 그 아래 작은 회색 글씨로 둔다. 연사가 없는 순서(개회식·패널·폐회 등)는
-       * 순서 이름을 그대로 제목으로 쓴다.
-       */}
-      <p className="mt-3 leading-snug font-bold text-ink">
-        {entry.speaker || entry.title}
-      </p>
-
-      {entry.speaker ? (
-        entry.affiliation && <p className="mt-1 text-sm text-muted">{entry.affiliation}</p>
-      ) : (
-        /*
-         * 연사를 기다리는 것은 강연뿐이다. 개회식·네트워킹·폐회처럼 강연이 아닌
-         * 순서에까지 "섭외 중"을 붙이면 준비가 덜 된 행사처럼 보인다.
-         * 강연인지 아닌지는 주소이름을 붙였는지로 구분한다.
-         */
-        entry.slug && <p className="mt-1 text-sm text-dim">연사 섭외 중</p>
-      )}
-
       {entry.summary && (
-        <p className="mt-3 text-sm leading-relaxed text-muted">{entry.summary}</p>
+        <div className="border-t border-line pt-4 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-8">
+          <p className="text-xs tracking-wider text-dim">
+            {entry.speaker ? "발표 주제" : "내용"}
+          </p>
+          <p className="mt-2 leading-relaxed text-muted">{entry.summary}</p>
+        </div>
       )}
-    </>
+    </div>
   );
 
   return <div className="border border-line p-5">{body}</div>;
