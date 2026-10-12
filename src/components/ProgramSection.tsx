@@ -84,13 +84,17 @@ function Slot({ entry, parallel }: { entry: Entry; parallel: boolean }) {
         {entry.room && <span className="text-xs text-dim">{entry.room}</span>}
       </div>
 
-      <p className="mt-3 leading-snug font-bold text-ink">{entry.title}</p>
+      {/*
+       * 연사가 정해진 세션은 연사 이름을 제목 자리에 크게 두고, 소속·직함을
+       * 그 아래 작은 회색 글씨로 둔다. 연사가 없는 순서(개회식·패널·폐회 등)는
+       * 순서 이름을 그대로 제목으로 쓴다.
+       */}
+      <p className="mt-3 leading-snug font-bold text-ink">
+        {entry.speaker || entry.title}
+      </p>
 
       {entry.speaker ? (
-        <p className="mt-1 text-sm text-muted">
-          {entry.speaker}
-          {entry.affiliation && <span className="text-dim"> · {entry.affiliation}</span>}
-        </p>
+        entry.affiliation && <p className="mt-1 text-sm text-muted">{entry.affiliation}</p>
       ) : (
         /*
          * 연사를 기다리는 것은 강연뿐이다. 개회식·네트워킹·폐회처럼 강연이 아닌

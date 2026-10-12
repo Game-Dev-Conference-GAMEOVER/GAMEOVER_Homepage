@@ -28,7 +28,7 @@ export async function generateMetadata({
   const s = find(slug);
   if (!s) return {};
 
-  const title = s.speaker ? `${s.title} — ${s.speaker}` : s.title;
+  const title = s.speaker || s.title;
   const image = absoluteUrl(s.photo) ?? absoluteUrl(content.site.shareImage);
 
   return {
@@ -64,15 +64,13 @@ export default async function SessionPage({ params }: { params: Promise<{ slug: 
             {s.room && <span className="text-sm text-dim">· {s.room}</span>}
           </div>
 
+          {/* 연사가 정해졌으면 이름을 제목으로, 소속·직함을 그 아래 회색으로. */}
           <h1 className="mt-5 text-3xl leading-tight font-extrabold text-ink md:text-4xl">
-            {s.title}
+            {s.speaker || s.title}
           </h1>
 
-          {s.speaker && (
-            <p className="mt-4 text-lg text-ink">
-              {s.speaker}
-              {s.affiliation && <span className="text-muted"> · {s.affiliation}</span>}
-            </p>
+          {s.speaker && s.affiliation && (
+            <p className="mt-4 text-lg text-muted">{s.affiliation}</p>
           )}
 
           {s.photo && (
