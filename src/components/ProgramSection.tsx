@@ -107,10 +107,18 @@ function Slot({ entry, parallel }: { entry: Entry; parallel: boolean }) {
 
       {entry.summary && (
         <div className="border-t border-line pt-4 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-8">
-          <p className="text-xs tracking-wider text-dim">
+          <p className="text-xs tracking-wider text-accent">
             {entry.speaker ? "발표 주제" : "내용"}
           </p>
-          <p className="mt-2 leading-relaxed text-muted">{entry.summary}</p>
+          {/* 연사 세션의 발표 주제는 카드의 핵심 정보라 밝고 크게. 패널·이벤트 설명은 보조이므로 흐리게. */}
+          <p
+            className={
+              "mt-2 leading-snug " +
+              (entry.speaker ? "text-lg font-bold text-ink" : "text-muted")
+            }
+          >
+            {entry.summary}
+          </p>
         </div>
       )}
     </div>
