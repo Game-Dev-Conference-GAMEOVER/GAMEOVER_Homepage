@@ -55,7 +55,7 @@ export function PartnersSection() {
       <Title>함께하는 곳</Title>
 
       <div className="mt-12">
-        <p className="text-xs tracking-wider text-accent">참여 동아리</p>
+        <p className="text-xs tracking-wider text-accent">컨퍼런스 및 부울경 연합 참여 동아리</p>
         <div className="mt-6">
           <LogoGrid logos={CLUBS} cols="grid-cols-3 sm:grid-cols-4 lg:grid-cols-5" />
         </div>
