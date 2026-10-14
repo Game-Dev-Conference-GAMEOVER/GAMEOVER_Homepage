@@ -32,12 +32,15 @@ function LogoGrid({ logos, cols }: { logos: Logo[]; cols: string }) {
     <ul className={`grid ${cols} items-center gap-x-8 gap-y-10`}>
       {logos.map((l) => (
         <li key={l.file} className="flex items-center justify-center">
-          {/* 흰색·투명 로고라 어두운 바탕에 바로 얹는다. 저마다 비율이 달라 높이로 맞춘다. */}
+          {/*
+           * 로고 파일은 전부 같은 비율(3:1) 캔버스에 담아, 그림마다 다른 여백과
+           * 가로세로비를 미리 보정해 두었다. 그래서 폭만 맞추면 보이는 크기가 고르게 선다.
+           */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={asset(l.file)}
             alt={l.name}
-            className="max-h-10 w-auto max-w-[9rem] object-contain opacity-80 transition hover:opacity-100 md:max-h-12"
+            className="w-full max-w-[9.5rem] object-contain opacity-85 transition hover:opacity-100"
           />
         </li>
       ))}
