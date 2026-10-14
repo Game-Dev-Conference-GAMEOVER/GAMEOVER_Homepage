@@ -96,7 +96,7 @@ export function Tag({ children, strong = false }: { children: ReactNode; strong?
     <span
       className={
         "inline-block px-2 py-1 text-xs font-bold " +
-        (strong ? "border border-accent text-accent" : "border border-line text-muted")
+        (strong ? "border border-line text-accent" : "border border-line text-muted")
       }
     >
       {children}
