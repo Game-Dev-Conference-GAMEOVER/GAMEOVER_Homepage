@@ -49,7 +49,7 @@ export function ProgramSection() {
               }
             >
               {row.items.map((e, i) => (
-                <Slot key={`${e.kind}-${i}`} entry={e} parallel={row.items.length > 1} />
+                <Slot key={`${e.kind}-${i}`} entry={e} />
               ))}
             </div>
           </div>
@@ -59,7 +59,7 @@ export function ProgramSection() {
   );
 }
 
-function Slot({ entry, parallel }: { entry: Entry; parallel: boolean }) {
+function Slot({ entry }: { entry: Entry }) {
   const isBreak = entry.kind === BREAK;
 
   /* 쉬는 시간은 흐리게 두되, 그 시간에 무엇을 하는지는 한 줄로 덧붙인다. */
@@ -80,7 +80,7 @@ function Slot({ entry, parallel }: { entry: Entry; parallel: boolean }) {
     <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] sm:items-center sm:gap-8">
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <Tag strong={parallel}>{entry.kind}</Tag>
+          <Tag strong>{entry.kind}</Tag>
           {entry.room && <span className="text-xs text-dim">{entry.room}</span>}
         </div>
 
