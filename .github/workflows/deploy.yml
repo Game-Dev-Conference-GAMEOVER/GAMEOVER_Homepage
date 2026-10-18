@@ -48,14 +48,20 @@ jobs:
         # SITE_URL 은 카톡 공유 미리보기용 절대 주소를 만드는 데 쓴다.
         # 자체 도메인을 쓴다면 저장소 Variables 에 SITE_URL 을 등록하면 그 값이 우선한다.
         run: |
-          if [ "${{ github.event.repository.name }}" = "${{ github.repository_owner }}.github.io" ]; then
+          # GitHub Pages 호스트는 항상 소문자(계정.github.io)다. 소유자명 표시 대소문자를
+          # 그대로 쓰면 canonical·og:url·사이트맵 주소의 호스트가 대문자로 섞여, 소문자로
+          # 등록한 Search Console 속성과 어긋나 보인다(사이트맵이 "가져올 수 없음"이 된다).
+          # 그래서 호스트는 소문자로 맞추고, 경로(/저장소이름)는 대소문자가 중요하므로 그대로 둔다.
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO="${{ github.event.repository.name }}"
+          if [ "$(echo "$REPO" | tr '[:upper:]' '[:lower:]')" = "${OWNER_LC}.github.io" ]; then
             BASE_PATH=""
           else
-            BASE_PATH="/${{ github.event.repository.name }}"
+            BASE_PATH="/$REPO"
           fi
           SITE_URL="${{ vars.SITE_URL }}"
           if [ -z "$SITE_URL" ]; then
-            SITE_URL="https://${{ github.repository_owner }}.github.io${BASE_PATH}"
+            SITE_URL="https://${OWNER_LC}.github.io${BASE_PATH}"
           fi
           echo "BASE_PATH=$BASE_PATH / SITE_URL=$SITE_URL"
           BASE_PATH="$BASE_PATH" SITE_URL="$SITE_URL" npm run build
