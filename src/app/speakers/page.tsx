@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { content } from "@/data/content";
+import { absoluteUrl } from "@/lib/asset";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Button, Eyebrow, Lead, Section, Title } from "@/components/ui";
@@ -10,9 +11,20 @@ import { Button, Eyebrow, Lead, Section, Title } from "@/components/ui";
  * 노션이 아니라 홈페이지에 두는 이유: 연사가 노션 계정 없이 링크만으로 열 수 있어야 한다.
  * 섭외 메일에 이 주소를 넣으면 그것으로 안내가 끝난다.
  */
+const canonical = absoluteUrl("/speakers/");
+
 export const metadata: Metadata = {
   title: content.speakerGuide.title,
   description: content.speakerGuide.lead,
+  alternates: canonical ? { canonical } : undefined,
+  openGraph: {
+    title: `${content.speakerGuide.title} · ${content.site.name}`,
+    description: content.speakerGuide.lead,
+    type: "website",
+    locale: "ko_KR",
+    siteName: content.site.name,
+    ...(canonical ? { url: canonical } : {}),
+  },
 };
 
 export default function SpeakersPage() {
