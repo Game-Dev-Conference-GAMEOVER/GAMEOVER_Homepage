@@ -40,6 +40,10 @@ jobs:
           # 저장소 Settings > Secrets and variables > Actions > Variables 에 등록.
           # 비어 있으면 저장소에 있는 content.json 으로 빌드된다.
           SHEET_ID: ${{ vars.SHEET_ID }}
+          # 검색 콘솔 소유권 확인 토큰. 등록 전에는 비어 있어도 되고, 그러면 메타 태그가 빠진다.
+          # Google Search Console / 네이버 서치어드바이저에서 발급받아 Variables 에 넣는다.
+          GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
+          NAVER_SITE_VERIFICATION: ${{ vars.NAVER_SITE_VERIFICATION }}
         # username.github.io 저장소가 아니면 /저장소이름 을 base path로 붙인다.
         # SITE_URL 은 카톡 공유 미리보기용 절대 주소를 만드는 데 쓴다.
         # 자체 도메인을 쓴다면 저장소 Variables 에 SITE_URL 을 등록하면 그 값이 우선한다.

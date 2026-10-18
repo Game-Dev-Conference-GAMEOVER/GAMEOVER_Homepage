@@ -27,6 +27,25 @@ const canonical = absoluteUrl("/");
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 const shareImage = absoluteUrl(site.shareImage);
 
+/*
+ * 검색 콘솔 소유권 확인 토큰. 구글 Search Console·네이버 서치어드바이저에서
+ * 사이트를 등록할 때 발급되는 값이다. 저장소 Settings > Secrets and variables >
+ * Actions > Variables 에 GOOGLE_SITE_VERIFICATION / NAVER_SITE_VERIFICATION 으로
+ * 넣으면 배포 워크플로가 전달한다. 값이 없으면 해당 메타 태그가 통째로 빠진다.
+ * 이 메타는 빌드 때만 읽으므로 브라우저로 노출할 필요가 없어 NEXT_PUBLIC_ 접두사를 쓰지 않는다.
+ */
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
+const naverVerification = process.env.NAVER_SITE_VERIFICATION;
+const verification =
+  googleVerification || naverVerification
+    ? {
+        ...(googleVerification ? { google: googleVerification } : {}),
+        ...(naverVerification
+          ? { other: { "naver-site-verification": naverVerification } }
+          : {}),
+      }
+    : undefined;
+
 export const metadata: Metadata = {
   // 상대 경로 메타데이터의 기준 주소. 배포 경로까지 포함한 SITE_URL 을 그대로 쓴다.
   metadataBase: siteUrl ? new URL(siteUrl) : undefined,
@@ -55,6 +74,8 @@ export const metadata: Metadata = {
   alternates: canonical ? { canonical } : undefined,
   // 전화번호·메일·주소를 브라우저가 멋대로 링크로 바꾸지 않게 한다.
   formatDetection: { telephone: false, email: false, address: false },
+  // 검색 콘솔 소유권 확인. 토큰이 없으면 통째로 빠진다.
+  verification,
   robots: {
     index: true,
     follow: true,
