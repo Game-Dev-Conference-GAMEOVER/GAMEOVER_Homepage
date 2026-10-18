@@ -33,8 +33,12 @@ const shareImage = absoluteUrl(site.shareImage);
  * Actions > Variables 에 GOOGLE_SITE_VERIFICATION / NAVER_SITE_VERIFICATION 으로
  * 넣으면 배포 워크플로가 전달한다. 값이 없으면 해당 메타 태그가 통째로 빠진다.
  * 이 메타는 빌드 때만 읽으므로 브라우저로 노출할 필요가 없어 NEXT_PUBLIC_ 접두사를 쓰지 않는다.
+ *
+ * 구글 토큰은 이미 발급받아 아래 기본값으로 박아 둔다(페이지에 그대로 드러나는 공개 값이다).
+ * Variables 에 값을 넣으면 그쪽이 우선한다. 네이버 토큰은 발급 전이라 비어 있다.
  */
-const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
+const googleVerification =
+  process.env.GOOGLE_SITE_VERIFICATION || "ZgHlnNKk8i1UinoRuXh4S4Df5h_YqDsNyyOUyFN5-xw";
 const naverVerification = process.env.NAVER_SITE_VERIFICATION;
 const verification =
   googleVerification || naverVerification
