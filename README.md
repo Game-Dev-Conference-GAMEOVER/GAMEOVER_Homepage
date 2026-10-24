@@ -27,9 +27,7 @@ UPTRAND 홈페이지와 같은 구조를 씁니다. 운영 방식이 동일하�
 ```
 src/
 ├─ app/
-│  ├─ page.tsx              메인 (Hero · About · Program · Venue · FAQ)
-│  ├─ sessions/[slug]/      세션별 전용 페이지 (공유 시 미리보기용)
-│  └─ speakers/             연사 안내 (섭외 메일에 넣는 주소)
+│  └─ page.tsx              메인 (Hero · About · Program · Venue · FAQ)
 ├─ components/              섹션과 공용 UI
 ├─ data/
 │  ├─ content.json          사이트의 유일한 콘텐츠 원본 (시트에서 생성됨)

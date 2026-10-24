@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { content } from "@/data/content";
 
 export function Footer() {
@@ -56,10 +55,6 @@ export function Footer() {
               </a>
             )}
           </div>
-
-          <Link href="/speakers/" className="text-sm text-muted hover:text-accent">
-            연사 안내 →
-          </Link>
         </div>
       </footer>
     </>

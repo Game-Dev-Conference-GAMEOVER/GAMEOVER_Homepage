@@ -77,16 +77,6 @@ export type Venue = {
   note: string;
 };
 
-export type SpeakerGuide = {
-  title: string;
-  lead: string;
-  deadline: string;
-  templateDark: string;
-  templateLight: string;
-  submit: string;
-  dayOf: string[];
-};
-
 export type Faq = { q: string; a: string };
 
 export type Content = {
@@ -96,7 +86,6 @@ export type Content = {
   tracks: Track[];
   schedule: Entry[];
   venue: Venue;
-  speakerGuide: SpeakerGuide;
   faq: Faq[];
 };
 

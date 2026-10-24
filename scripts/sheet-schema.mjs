@@ -260,34 +260,6 @@ export const TABS = [
   },
 
   {
-    name: "연사안내",
-    kind: "kv",
-    note: "연사에게 보여줄 페이지(/speakers). 자료 마감과 템플릿 주소를 여기서 바꿉니다",
-    fields: [
-      ["제목", "speakerGuide.title", ""],
-      ["리드 문장", "speakerGuide.lead", ""],
-      ["자료 제출 마감", "speakerGuide.deadline", ""],
-      ["템플릿(다크) 주소", "speakerGuide.templateDark", ""],
-      ["템플릿(라이트) 주소", "speakerGuide.templateLight", ""],
-      ["제출 방법", "speakerGuide.submit", ""],
-      ["당일 안내", "speakerGuide.dayOf", "한 줄에 하나씩"],
-    ],
-    read(get, draft) {
-      for (const [label, path] of this.fields) {
-        const raw = get(label);
-        if (raw === undefined) continue;
-        setPath(draft, path, path.endsWith("dayOf") ? lines(raw) : text(raw));
-      }
-    },
-    write(content) {
-      return this.fields.map(([label, path, note]) => {
-        const v = getPath(content, path);
-        return [label, Array.isArray(v) ? linesOut(v) : String(v ?? ""), note];
-      });
-    },
-  },
-
-  {
     name: "FAQ",
     kind: "rows",
     note: "자주 묻는 질문. 답변은 한 칸 안에서 줄바꿈해도 됩니다",
