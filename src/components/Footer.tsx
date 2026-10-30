@@ -16,28 +16,14 @@ export function Footer() {
             {site.dateLabel}, 만나요
           </h2>
           <p className="mt-4 max-w-xl leading-relaxed text-muted">
-            {site.fee} · {site.venue}
-            {site.applyUrl && site.applyDeadline && ` · 신청 마감 ${site.applyDeadline}`}
+            {site.fee} · {site.venue} · 참가 신청 마감
           </p>
+          {/* 참가 신청 마감 — 2026.10.31 행사 */}
           <div className="mt-8">
-            {site.applyUrl || site.surveyUrl ? (
-              <a
-                href={site.applyUrl || site.surveyUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex bg-accent px-7 py-4 text-base font-bold text-bg hover:brightness-110"
-              >
-                {site.applyUrl ? "참가 신청하기" : "수요조사 참여하기"}
-              </a>
-            ) : (
-              <span className="inline-flex border border-line px-7 py-4 text-base font-bold text-dim">
-                참가 신청 준비 중
-              </span>
-            )}
+            <span className="inline-flex border border-line px-7 py-4 text-base font-bold text-dim">
+              신청 마감
+            </span>
           </div>
-          {!site.applyUrl && site.surveyUrl && site.surveyNote && (
-            <p className="mt-4 max-w-xl text-sm text-dim">{site.surveyNote}</p>
-          )}
         </div>
       </section>
 
