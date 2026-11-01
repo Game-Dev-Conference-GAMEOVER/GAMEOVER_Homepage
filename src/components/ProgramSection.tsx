@@ -1,6 +1,22 @@
 import { BREAK, content, groupByStart, minutes } from "@/data/content";
 import type { Entry } from "@/data/content";
+import { asset } from "@/lib/asset";
 import { Eyebrow, Section, Tag, Title } from "./ui";
+
+/**
+ * 연사가 공개에 동의한 발표 자료(PDF). public/slides/ 에 둔다.
+ *
+ * content.json 은 배포할 때 구글 시트가 덮어쓰므로, 자료 링크를 content 에 넣으면
+ * 시트 빌드에서 사라진다. 그래서 시트가 건드리지 않는 이 코드에 세션 slug 로 매긴다.
+ * 하상석(industry-1) 대표님은 비공개를 요청하셔서 넣지 않는다.
+ */
+const SLIDES: Record<string, string> = {
+  "industry-2": "/slides/industry-2.pdf",
+  "indie-1": "/slides/indie-1.pdf",
+  "indie-2": "/slides/indie-2.pdf",
+  "indie-3": "/slides/indie-3.pdf",
+  "indie-4": "/slides/indie-4.pdf",
+};
 
 /**
  * 타임테이블.
@@ -102,6 +118,19 @@ function Slot({ entry }: { entry: Entry }) {
            * 강연인지 아닌지는 주소이름을 붙였는지로 구분한다.
            */
           entry.slug && <p className="mt-1 text-sm text-dim">연사 섭외 중</p>
+        )}
+
+        {/* 공개에 동의한 연사의 발표 자료. 동의하지 않은 세션에는 링크를 걸지 않는다. */}
+        {entry.slug && SLIDES[entry.slug] && (
+          <a
+            href={asset(SLIDES[entry.slug])}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-1.5 border border-line px-3 py-1.5 text-xs font-bold text-ink hover:border-accent hover:text-accent"
+          >
+            발표 자료 PDF
+            <span aria-hidden>↗</span>
+          </a>
         )}
       </div>
 
