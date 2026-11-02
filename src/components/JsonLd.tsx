@@ -1,4 +1,6 @@
-import { content, sessions } from "@/data/content";
+import { conference } from "@/data/conference";
+import type { Edition } from "@/data/editions";
+import { sessionsOf } from "@/data/schedule";
 import { absoluteUrl } from "@/lib/asset";
 
 /**
@@ -24,19 +26,19 @@ function toIso(dateLabel: string, time: string): string | undefined {
   return `${y}-${pad(mo)}-${pad(da)}T${pad(hh)}:${pad(mm)}:00+09:00`;
 }
 
-export function JsonLd() {
-  const { site, venue } = content;
+export function JsonLd({ edition }: { edition: Edition }) {
+  const venue = edition.venue;
 
-  const [startTime, endTime] = site.timeLabel.split(/[~\-–]/).map((s) => s.trim());
-  const startDate = toIso(site.dateLabel, startTime ?? "");
-  const endDate = toIso(site.dateLabel, endTime ?? "");
-  const url = absoluteUrl("/") ?? site.url;
-  const image = absoluteUrl(site.shareImage);
+  const [startTime, endTime] = edition.timeLabel.split(/[~\-–]/).map((s) => s.trim());
+  const startDate = toIso(edition.dateLabel, startTime ?? "");
+  const endDate = toIso(edition.dateLabel, endTime ?? "");
+  const url = absoluteUrl(`/${edition.year}/`) ?? conference.url;
+  const image = absoluteUrl(conference.shareImage);
 
   // 연사가 정해진 세션에서 사람만 추린다. 같은 이름이 여러 세션에 나와도 한 번만 넣는다.
   const performer = [
     ...new Map(
-      sessions
+      sessionsOf(edition.schedule)
         .filter((e) => e.speaker)
         .map((e) => [
           e.speaker,
@@ -52,8 +54,8 @@ export function JsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@type": "Event",
-    name: site.name,
-    description: site.lead,
+    name: `${conference.name} ${edition.year}`,
+    description: conference.lead,
     ...(startDate ? { startDate } : {}),
     ...(endDate ? { endDate } : {}),
     eventStatus: "https://schema.org/EventScheduled",
@@ -72,8 +74,8 @@ export function JsonLd() {
     },
     organizer: {
       "@type": "Organization",
-      name: site.host,
-      ...(site.email ? { email: site.email } : {}),
+      name: conference.host,
+      ...(conference.email ? { email: conference.email } : {}),
     },
     ...(performer.length ? { performer } : {}),
     offers: {
@@ -82,17 +84,17 @@ export function JsonLd() {
       priceCurrency: "KRW",
       availability: "https://schema.org/InStock",
       // 신청 주소가 있으면 그곳을, 없으면 사이트 자체를 가리킨다.
-      ...(site.applyUrl ? { url: site.applyUrl } : url ? { url } : {}),
+      ...(edition.applyUrl ? { url: edition.applyUrl } : url ? { url } : {}),
     },
   };
 
   // FAQ 도 구조화해 두면 검색 결과에 질문·답이 바로 펼쳐질 수 있다.
   const faq =
-    content.faq.length > 0
+    edition.faq.length > 0
       ? {
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: content.faq.map((f) => ({
+          mainEntity: edition.faq.map((f) => ({
             "@type": "Question",
             name: f.q,
             acceptedAnswer: { "@type": "Answer", text: f.a },

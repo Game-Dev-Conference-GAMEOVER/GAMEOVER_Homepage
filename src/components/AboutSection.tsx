@@ -1,8 +1,8 @@
-import { content } from "@/data/content";
+import { conference } from "@/data/conference";
 import { Eyebrow, Lead, Section, Title } from "./ui";
 
 export function AboutSection() {
-  const { about, structure } = content;
+  const { about, structure } = conference;
 
   return (
     <Section id="about">

@@ -1,8 +1,8 @@
-import { content } from "@/data/content";
+import type { Edition } from "@/data/editions";
 import { Eyebrow, Section, Title } from "./ui";
 
-export function FaqSection() {
-  const { faq } = content;
+export function FaqSection({ edition }: { edition: Edition }) {
+  const { faq } = edition;
   if (faq.length === 0) return null;
 
   return (

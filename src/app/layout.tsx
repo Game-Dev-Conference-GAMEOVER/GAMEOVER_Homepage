@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Anton } from "next/font/google";
-import { content } from "@/data/content";
+import { conference } from "@/data/conference";
 import { absoluteUrl } from "@/lib/asset";
 import "./globals.css";
 
@@ -15,8 +15,12 @@ const anton = Anton({
   display: "swap",
 });
 
-const { site } = content;
-const title = `${site.name} — ${site.dateLabel}`;
+/*
+ * 전면(/)은 특정 회차가 아니라 컨퍼런스 자체를 가리킨다. 그래서 기본 제목·설명에는
+ * 날짜를 넣지 않는다. 회차 페이지(/2026/ 등)는 각자 metadata 로 제목을 덮어쓴다.
+ */
+const site = conference;
+const title = `${site.name} — 게임 개발 컨퍼런스`;
 const description = site.lead;
 
 /*
@@ -25,7 +29,7 @@ const description = site.lead;
  */
 const canonical = absoluteUrl("/");
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-const shareImage = absoluteUrl(site.shareImage);
+const shareImage = absoluteUrl(conference.shareImage);
 
 /*
  * 검색 콘솔 소유권 확인 토큰. 구글 Search Console·네이버 서치어드바이저에서
@@ -68,7 +72,7 @@ export const metadata: Metadata = {
     "울산 게임",
     "동명대학교",
     "CHECKPOINT",
-    ...content.tracks.map((t) => t.name),
+    ...conference.tracks.map((t) => t.name),
   ],
   authors: [{ name: site.host }],
   creator: site.host,

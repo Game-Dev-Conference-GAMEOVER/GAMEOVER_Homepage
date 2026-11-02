@@ -1,8 +1,8 @@
-import { content } from "@/data/content";
+import type { Edition } from "@/data/editions";
 import { Button, Eyebrow, Section, Title } from "./ui";
 
-export function VenueSection() {
-  const { venue } = content;
+export function VenueSection({ edition }: { edition: Edition }) {
+  const { venue } = edition;
 
   return (
     <Section id="venue" className="border-t border-line">

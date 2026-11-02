@@ -1,22 +1,9 @@
-import { BREAK, content, groupByStart, minutes } from "@/data/content";
-import type { Entry } from "@/data/content";
+import { conference } from "@/data/conference";
+import type { Edition } from "@/data/editions";
+import { BREAK, groupByStart, minutes } from "@/data/schedule";
+import type { Entry } from "@/data/schedule";
 import { asset } from "@/lib/asset";
 import { Eyebrow, Section, Tag, Title } from "./ui";
-
-/**
- * 연사가 공개에 동의한 발표 자료(PDF). public/slides/ 에 둔다.
- *
- * content.json 은 배포할 때 구글 시트가 덮어쓰므로, 자료 링크를 content 에 넣으면
- * 시트 빌드에서 사라진다. 그래서 시트가 건드리지 않는 이 코드에 세션 slug 로 매긴다.
- * 하상석(industry-1) 대표님은 비공개를 요청하셔서 넣지 않는다.
- */
-const SLIDES: Record<string, string> = {
-  "industry-2": "/slides/industry-2.pdf",
-  "indie-1": "/slides/indie-1.pdf",
-  "indie-2": "/slides/indie-2.pdf",
-  "indie-3": "/slides/indie-3.pdf",
-  "indie-4": "/slides/indie-4.pdf",
-};
 
 /**
  * 타임테이블.
@@ -25,9 +12,11 @@ const SLIDES: Record<string, string> = {
  * 묶는 구조는 그대로 두었다. 나중에 병렬 세션이 생겨도 코드를 고칠 필요가 없다.
  * 주제별 색 구분은 하지 않는다. 강조색은 마젠타 하나뿐이다.
  */
-export function ProgramSection() {
-  const { schedule, tracks } = content;
-  const rows = groupByStart([...schedule].sort((a, b) => minutes(a.start) - minutes(b.start)));
+export function ProgramSection({ edition }: { edition: Edition }) {
+  const tracks = conference.tracks;
+  const rows = groupByStart(
+    [...edition.schedule].sort((a, b) => minutes(a.start) - minutes(b.start)),
+  );
 
   return (
     <Section id="program" className="border-t border-line">
@@ -65,7 +54,7 @@ export function ProgramSection() {
               }
             >
               {row.items.map((e, i) => (
-                <Slot key={`${e.kind}-${i}`} entry={e} />
+                <Slot key={`${e.kind}-${i}`} entry={e} slides={edition.slides} />
               ))}
             </div>
           </div>
@@ -75,7 +64,7 @@ export function ProgramSection() {
   );
 }
 
-function Slot({ entry }: { entry: Entry }) {
+function Slot({ entry, slides }: { entry: Entry; slides: Record<string, string> }) {
   const isBreak = entry.kind === BREAK;
 
   /* 쉬는 시간은 흐리게 두되, 그 시간에 무엇을 하는지는 한 줄로 덧붙인다. */
@@ -121,9 +110,9 @@ function Slot({ entry }: { entry: Entry }) {
         )}
 
         {/* 공개에 동의한 연사의 발표 자료. 동의하지 않은 세션에는 링크를 걸지 않는다. */}
-        {entry.slug && SLIDES[entry.slug] && (
+        {entry.slug && slides[entry.slug] && (
           <a
-            href={asset(SLIDES[entry.slug])}
+            href={asset(slides[entry.slug])}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-1.5 border border-line px-3 py-1.5 text-xs font-bold text-ink hover:border-accent hover:text-accent"

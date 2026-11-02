@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
+import { editions } from "@/data/editions";
 import { absoluteUrl } from "@/lib/asset";
 
 /*
  * /sitemap.xml 을 정적으로 굽는다. 검색엔진에 어떤 주소가 있는지 알려 준다.
  *
- * 라우트는 메인(/) 하나뿐이다. 세션 상세·연사 안내 페이지는 없으므로
- * 넣지 않는다(없는 주소를 올리면 오히려 색인에 해가 된다).
+ * 전면(/)과 각 회차 아카이브(/2026/ 등)를 올린다. 회차가 늘면 editions 에서
+ * 자동으로 따라 붙는다.
  *
  * 배포 주소를 모르는 로컬 개발에서는 빈 사이트맵이 된다 — 절대 주소가 없으면
  * 사이트맵에 쓸 값이 없기 때문이다. 배포 때는 워크플로가 SITE_URL 을 넣어 준다.
@@ -17,7 +18,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   if (!home) return [];
 
   const now = new Date();
+  const editionRoutes: MetadataRoute.Sitemap = editions.flatMap((e) => {
+    const url = absoluteUrl(`/${e.year}/`);
+    return url ? [{ url, lastModified: now, changeFrequency: "yearly" as const, priority: 0.8 }] : [];
+  });
+
   return [
-    { url: home, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: home, lastModified: now, changeFrequency: "monthly", priority: 1 },
+    ...editionRoutes,
   ];
 }
