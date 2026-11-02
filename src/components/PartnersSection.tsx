@@ -8,11 +8,11 @@ import { Eyebrow, Section, Title } from "./ui";
  * 파일은 public/images/logos/ 에 흰색·투명 배경으로 들어 있다.
  * 정적 내보내기라 next/image 대신 img 를 쓰고 경로에 배포 경로를 붙인다.
  */
-type Logo = { name: string; file: string };
+type Logo = { name: string; file: string; url?: string };
 
 const CLUBS: Logo[] = [
-  { name: "동명대 UPTRAND", file: "/images/logos/club-uptrand.png" },
-  { name: "동명대 GIZMO", file: "/images/logos/club-gizmo.png" },
+  { name: "동명대 UPTRAND", file: "/images/logos/club-uptrand.png", url: "https://uptrand-admin.github.io/Homepage/" },
+  { name: "동명대 GIZMO", file: "/images/logos/club-gizmo.png", url: "https://gizmogames.dev/" },
   { name: "부경대 WAP", file: "/images/logos/club-wap.png" },
   { name: "울산대 GG", file: "/images/logos/club-gg.png" },
   { name: "울산대 Division", file: "/images/logos/club-division.png" },
@@ -29,9 +29,9 @@ const SPONSORS: Logo[] = [
 
 function LogoGrid({ logos, cols }: { logos: Logo[]; cols: string }) {
   return (
-    <ul className={`grid ${cols} items-center gap-x-8 gap-y-10`}>
+    <ul className={`grid ${cols} items-start gap-x-8 gap-y-10`}>
       {logos.map((l) => (
-        <li key={l.file} className="flex items-center justify-center">
+        <li key={l.file} className="flex flex-col items-center gap-3">
           {/*
            * 로고 파일은 전부 같은 비율(3:1) 캔버스에 담아, 그림마다 다른 여백과
            * 가로세로비를 미리 보정해 두었다. 그래서 폭만 맞추면 보이는 크기가 고르게 선다.
@@ -42,6 +42,18 @@ function LogoGrid({ logos, cols }: { logos: Logo[]; cols: string }) {
             alt={l.name}
             className="w-full max-w-[9.5rem] object-contain opacity-85 transition hover:opacity-100"
           />
+          {/* 홈페이지가 있는 동아리에만 바로가기 버튼을 붙인다. */}
+          {l.url && (
+            <a
+              href={l.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center gap-1 border border-line px-2.5 py-1 text-xs text-muted transition hover:border-accent hover:text-accent"
+            >
+              홈페이지
+              <span aria-hidden>↗</span>
+            </a>
+          )}
         </li>
       ))}
     </ul>
