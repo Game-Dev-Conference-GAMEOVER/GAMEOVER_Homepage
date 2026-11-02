@@ -3,7 +3,7 @@
 동명대학교 게임 개발 동아리 연합이 여는 게임 개발 컨퍼런스 **GAME OVER?** (약칭 GO) 의 공식 홈페이지입니다.
 Next.js(App Router) + TypeScript + Tailwind CSS v4 로 만들어졌고, 모든 페이지가 정적으로 생성되어 GitHub Pages 에 배포됩니다.
 
-**공개 주소** — https://game-dev-conference-continue.github.io/GAMEOVER_Homepage/
+**공개 주소** — https://game-dev-conference-gameover.github.io/GAMEOVER_Homepage/
 
 > 저장소 이름을 바꾸면 이 주소도 함께 바뀌고 **예전 주소는 되살아나지 않습니다.**
 > 이름을 바꾼 뒤에는 반드시 Actions 에서 워크플로를 다시 돌려야 합니다.
@@ -12,27 +12,41 @@ Next.js(App Router) + TypeScript + Tailwind CSS v4 로 만들어졌고, 모든 �
 
 UPTRAND 홈페이지와 같은 구조를 씁니다. 운영 방식이 동일하므로 한쪽을 다뤄 봤다면 그대로 통합니다.
 
-## 운영하시는 분께
+## 연례 구조
 
-홈페이지 내용은 **구글 시트에서 수정합니다.** 코드나 git 을 볼 필요가 없습니다.
+해마다 열리는 컨퍼런스를 담습니다. 페이지는 두 종류입니다.
 
-```
-구글 시트 수정  →  [사이트 업데이트] 실행  →  1~2분 뒤 반영
-```
+- **전면 `/`** — 컨퍼런스 자체 범용 소개(이름·슬로건·성격·지난 회차 목록).
+- **회차 아카이브 `/YYYY/`** — 그해 행사의 전체 기록(타임테이블·발표자료·오시는 길·FAQ). 예: `/2026/`.
 
-자세한 방법, 시트 탭 설명, 문제 해결은 **[관리자 매뉴얼](docs/관리자-매뉴얼.md)** 에 정리되어 있습니다.
+내용은 **두 곳**에서 관리합니다.
+
+| 내용 | 어디서 |
+| --- | --- |
+| 상시 정보 — 이름·슬로건·소개·발표 구조·트랙·연락처 | **구글 시트** (코드 불필요) |
+| 회차 — 날짜·타임테이블·장소·FAQ·발표자료, 내년 회차 | **코드** (`src/data/editions/`) |
+
+> 지난 회차는 **동결**됩니다 — `/2026/` 의 타임테이블·장소·FAQ 는 코드(`editions/2026.ts`)에 박혀 있어, 구글 시트를 고쳐도 바뀌지 않습니다. 시트로 바뀌는 건 전면 소개에 쓰는 상시 정보뿐입니다.
+
+운영 방법·시트 탭·회차 추가법·문제 해결은 **[관리자 매뉴얼](docs/관리자-매뉴얼.md)** 에 있습니다.
 
 ## 구조
 
 ```
 src/
 ├─ app/
-│  └─ page.tsx              메인 (Hero · About · Program · Venue · FAQ)
+│  ├─ page.tsx              전면 — 범용 소개 (Landing · About · Editions · Partners)
+│  └─ 2026/page.tsx         2026 회차 아카이브 (Hero · Program · Venue · FAQ …)
 ├─ components/              섹션과 공용 UI
 ├─ data/
-│  ├─ content.json          사이트의 유일한 콘텐츠 원본 (시트에서 생성됨)
-│  └─ content.ts            타입을 입혀 내보내는 래퍼
-└─ lib/asset.ts             public/ 이미지 경로에 배포 경로를 붙임
+│  ├─ content.json          시트에서 생성되는 원본 (상시 정보)
+│  ├─ conference.ts         상시 정보(이름·슬로건·소개·발표 구조·트랙) — content.json 구독
+│  ├─ editions/
+│  │  ├─ 2026.ts            2026 회차 데이터 (동결: 일정·장소·FAQ·발표자료)
+│  │  ├─ index.ts           회차 목록·헬퍼
+│  │  └─ types.ts           Edition 타입
+│  └─ schedule.ts           회차 공통 타입·헬퍼(Entry·groupByStart 등)
+└─ lib/asset.ts             public/ 경로에 배포 경로를 붙임
 scripts/
 ├─ sheet-schema.mjs         시트 탭·열 정의 (양식 생성과 읽기 공용)
 ├─ sheet-io.mjs             시트 읽기와 탭 모양 검사 (배포·점검 공용)
@@ -44,22 +58,17 @@ sheet-template/             구글 시트로 가져올 CSV 8개
 docs/관리자-매뉴얼.md        운영자용 문서
 ```
 
-## 콘텐츠 모델에서 하나만 기억할 것
+## 콘텐츠 모델에서 기억할 것
 
-**타임테이블 · 연사 목록 · 세션 상세가 모두 `일정` 탭 하나에서 나옵니다.**
+**상시(conference) 와 회차(edition) 를 가릅니다.**
 
-연사 목록을 따로 관리하지 않기 때문에 타임테이블과 연사 정보가 어긋날 수 없습니다.
-한 줄이 곧 한 순서이고, `구분` 값이 그 줄의 성격을 정합니다.
+- `conference.ts` 는 `content.json`(=구글 시트)에서 이름·슬로건·소개·발표 구조·트랙을 읽습니다. 전면 소개가 여기서 나옵니다.
+- `editions/<year>.ts` 는 그해의 일정·장소·FAQ·발표자료를 **코드에 동결**합니다. 시트 영향을 받지 않습니다.
+- 회차 섹션(Hero·Program·Venue·Faq·JsonLd)은 `edition` 을 prop 으로 받고, 상시 섹션(Header·About·Partners·Landing\*)은 `conference` 를 읽습니다.
 
-| 구분 값 | 뜻 |
-| --- | --- |
-| `공통` | 주제를 가리지 않는 순서 (개회식, 키노트, 네트워킹, 폐회) |
-| `휴식` | 쉬는 시간·식사. 화면에서 흐리게 처리되고 상세 페이지를 만들지 않습니다 |
-| 주제 이름 | `트랙` 탭에 적은 이름 그대로 (기업 / 인디) |
+**타임테이블 한 줄 = 한 순서**이고, `kind`(`공통`/`휴식`/트랙 이름)가 성격을 정합니다. **시작 시각이 같은 줄은 화면에서 한 행에 나란히** 놓여 병렬 세션을 표현합니다.
 
-**시작 시각이 같은 줄은 화면에서 한 행에 나란히 놓입니다.** 지금은 트랙을 나누지 않아 한 시각에
-한 줄만 서지만, 나중에 병렬 세션이 생기면 그대로 나란히 표현됩니다.
-`주소이름`을 적은 줄만 세션 상세 페이지(`/sessions/주소이름/`)가 생깁니다.
+**내년 회차 추가** — `editions/2027.ts` 작성 → `editions/index.ts` 배열에 등록 → `src/app/2027/page.tsx` 라우트 추가. sitemap·전면 "지난 회차" 목록은 자동 반영됩니다.
 
 ## 개발
 
@@ -83,7 +92,7 @@ npm run dev
 
 ## 배포
 
-`master` 에 푸시하거나 Actions 에서 수동 실행하면 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 이 시트를 읽어 빌드하고 GitHub Pages 에 올립니다. 하루 두 번 자동 실행도 걸려 있습니다.
+`main` 에 푸시하거나 Actions 에서 수동 실행하면 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) 이 시트를 읽어 빌드하고 GitHub Pages 에 올립니다. 하루 두 번 자동 실행도 걸려 있습니다.
 
 처음 설정하는 방법은 [관리자 매뉴얼 6번](docs/관리자-매뉴얼.md#6-처음-한-번만-하는-설정) 을 보세요.
 
